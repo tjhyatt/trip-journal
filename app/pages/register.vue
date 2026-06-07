@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
+const authStore = useAuthStore();
 
 const username = ref("");
 const email = ref("");
@@ -14,6 +15,7 @@ watch(
   user,
   async (currentUser) => {
     if (currentUser) {
+      authStore.setUser(currentUser);
       await navigateTo("/");
     }
   },
@@ -60,6 +62,7 @@ async function signUp() {
   }
 
   if (data.session) {
+    authStore.setAuth(data);
     await navigateTo("/");
     return;
   }

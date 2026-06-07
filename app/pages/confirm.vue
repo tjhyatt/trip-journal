@@ -1,10 +1,12 @@
 <script setup lang="ts">
 const user = useSupabaseUser();
+const authStore = useAuthStore();
 
 watch(
   user,
   async (currentUser) => {
     if (currentUser) {
+      authStore.setUser(currentUser);
       await navigateTo("/");
     }
   },

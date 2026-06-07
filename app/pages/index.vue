@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const supabase = useSupabaseClient();
-const session = useSupabaseSession();
+const authStore = useAuthStore();
 
 const isSigningOut = ref(false);
 
@@ -11,6 +11,7 @@ async function signOut() {
 
   isSigningOut.value = true;
   await supabase.auth.signOut();
+  authStore.clearAuth();
   isSigningOut.value = false;
   await navigateTo("/login");
 }
@@ -23,7 +24,7 @@ async function signOut() {
       class="absolute right-4 top-4 z-10 flex items-center gap-3 rounded-lg border border-white/60 bg-white/90 px-4 py-3 text-sm shadow-sm backdrop-blur"
     >
       <span class="max-w-[38vw] truncate text-zinc-700">
-        {{ session?.user?.email }}
+        {{ authStore.email }}
       </span>
       <button
         class="rounded-md bg-zinc-950 px-3 py-2 font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:bg-zinc-400"

@@ -10,6 +10,7 @@ type UserProfile = {
 const route = useRoute();
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
+const authStore = useAuthStore();
 
 const isTripFormOpen = ref(false);
 const tripTitle = ref("");
@@ -21,8 +22,6 @@ const username = computed(() => {
   const value = route.params.username;
   return Array.isArray(value) ? value[0] : value;
 });
-
-const loggedInUser = await supabase.auth.getUser();
 
 const {
   data: profile,
@@ -74,10 +73,7 @@ const friendCount = computed(() => {
 });
 
 const isOwnProfile = computed(() =>
-  Boolean(
-    profile.value?.user_id &&
-    loggedInUser?.data?.user?.id === profile.value.user_id,
-  ),
+  Boolean(profile.value?.user_id && authStore.hasUserId(profile.value.user_id)),
 );
 
 function openTripForm() {
@@ -111,7 +107,7 @@ async function createTrip() {
     return;
   }
 
-  if (!user.value?.id) {
+  if (!isOwnProfile.value) {
     tripErrorMessage.value = "You need to be logged in to start a trip.";
     return;
   }
@@ -120,7 +116,7 @@ async function createTrip() {
 
   const { error: tripError } = await supabase.from("trips").insert({
     title,
-    userId: user.value.id,
+    userId: user.value.sub,
   });
 
   isCreatingTrip.value = false;
@@ -151,7 +147,6 @@ useHead(() => ({
       >
         Back to map
       </NuxtLink>
-      {{ loggedInUser }}
       <section
         v-if="pending"
         class="mt-8 rounded-lg border border-zinc-200 bg-white p-8 shadow-sm"

@@ -2,6 +2,7 @@
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 const redirectInfo = useSupabaseCookieRedirect();
+const authStore = useAuthStore();
 
 const email = ref("");
 const password = ref("");
@@ -12,6 +13,7 @@ watch(
   user,
   async (currentUser) => {
     if (currentUser) {
+      authStore.setUser(currentUser);
       await navigateTo(redirectInfo.pluck() || "/");
     }
   },
@@ -26,7 +28,7 @@ async function signIn() {
   errorMessage.value = "";
   isLoading.value = true;
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email: email.value,
     password: password.value,
   });
@@ -37,6 +39,8 @@ async function signIn() {
     errorMessage.value = error.message;
     return;
   }
+
+  authStore.setAuth(data);
 
   await navigateTo(redirectInfo.pluck() || "/");
 }
