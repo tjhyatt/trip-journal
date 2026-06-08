@@ -14,6 +14,7 @@ const authStore = useAuthStore();
 
 const isTripFormOpen = ref(false);
 const tripTitle = ref("");
+const tripStartDate = ref("");
 const isCreatingTrip = ref(false);
 const tripErrorMessage = ref("");
 const tripSuccessMessage = ref("");
@@ -89,6 +90,7 @@ function closeTripForm() {
 
   isTripFormOpen.value = false;
   tripTitle.value = "";
+  tripStartDate.value = "";
   tripErrorMessage.value = "";
 }
 
@@ -101,9 +103,15 @@ async function createTrip() {
   tripSuccessMessage.value = "";
 
   const title = tripTitle.value.trim();
+  const startDate = tripStartDate.value;
 
   if (!title) {
     tripErrorMessage.value = "Add a title for your trip.";
+    return;
+  }
+
+  if (!startDate) {
+    tripErrorMessage.value = "Select a start date for your trip.";
     return;
   }
 
@@ -116,6 +124,7 @@ async function createTrip() {
 
   const { error: tripError } = await supabase.from("trips").insert({
     title,
+    startDate,
     userId: user.value.sub,
   });
 
@@ -127,6 +136,7 @@ async function createTrip() {
   }
 
   tripTitle.value = "";
+  tripStartDate.value = "";
   isTripFormOpen.value = false;
   tripSuccessMessage.value = "Trip started.";
 }
@@ -248,6 +258,18 @@ useHead(() => ({
                   class="mt-2 w-full rounded-md border border-zinc-300 px-3 py-2.5 text-base outline-none transition focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/10"
                   type="text"
                   autocomplete="off"
+                  required
+                />
+              </label>
+
+              <label class="block">
+                <span class="text-sm font-medium text-zinc-700"
+                  >Start date</span
+                >
+                <input
+                  v-model="tripStartDate"
+                  class="mt-2 w-full rounded-md border border-zinc-300 px-3 py-2.5 text-base outline-none transition focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/10"
+                  type="date"
                   required
                 />
               </label>
