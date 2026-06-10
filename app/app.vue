@@ -5,5 +5,17 @@ await authStore.syncFromSupabase();
 </script>
 
 <template>
-  <NuxtPage />
+  <NuxtLayout>
+    <template #map>
+      <MapWorldMap />
+    </template>
+    <template #aside>
+      <!-- <UserMenuBar /> -->
+      <NuxtPage />
+    </template>
+    <template #main>
+      <!-- <UserMenuBar /> -->
+      <NuxtPage />
+    </template>
+  </NuxtLayout>
 </template>

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  layout: "default",
+});
+
 const supabase = useSupabaseClient();
 const authStore = useAuthStore();
 
@@ -19,7 +23,6 @@ async function signOut() {
 
 <template>
   <div class="relative">
-    <MapWorldMap />
     <div
       class="absolute right-4 top-4 z-10 flex items-center gap-3 rounded-lg border border-white/60 bg-white/90 px-4 py-3 text-sm shadow-sm backdrop-blur"
     >

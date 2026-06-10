@@ -7,9 +7,12 @@ export const useAuthStore = defineStore("auth", () => {
   const email = computed(() => user.value?.email || "");
   const metadata = computed(() => user.value?.user_metadata || {});
   const username = computed(() => metadata.value.username || "");
-  const avatarUrl = computed(() => metadata.value.avatar_url || metadata.value.picture || "");
-  const displayName = computed(() =>
-    metadata.value.full_name || username.value || email.value || "Traveler",
+  const avatarUrl = computed(
+    () => metadata.value.avatar_url || metadata.value.picture || "",
+  );
+  const displayName = computed(
+    () =>
+      metadata.value.full_name || username.value || email.value || "Traveler",
   );
 
   function setSession(nextSession) {

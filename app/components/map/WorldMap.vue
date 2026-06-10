@@ -17,7 +17,7 @@ onMounted(async () => {
   map = new maplibregl.Map({
     container: "map",
     // style: "https://tiles.openfreemap.org/styles/liberty",
-    style: "./style.json",
+    style: "../style.json",
     center: [138.59863, -34.92866],
     zoom: 14,
     maxZoom: 18,
